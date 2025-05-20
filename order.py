@@ -1,22 +1,22 @@
+from customer import Customer
+from coffee import Coffee
+
 class Order:
-    all_orders = []
+
+    _all = []
 
     def __init__(self, customer, coffee, price):
-        from customer import Customer
-        from coffee import Coffee
-
         if not isinstance(customer, Customer):
-            raise TypeError("customer must be an instance of Customer")
+            raise TypeError('must be a Customer instance!')
         if not isinstance(coffee, Coffee):
-            raise TypeError("coffee must be an instance of Coffee")
-        if not (isinstance(price, float) or isinstance(price, int)) or not (1.0 <= price <= 10.0):
-            raise ValueError("price must be a float between 1.0 and 10.0")
+            raise TypeError('must be a Coffee instance!')
+        if not isinstance(price, float) or not (1.0 <= price <= 10.0):
+            raise ValueError("Must be a float between 1.0 and 10.0")
 
-        self._customer = customer
         self._coffee = coffee
-        self._price = float(price)
-
-        Order.all_orders.append(self)
+        self._customer = customer
+        self._price = price
+        Order._all.append(self)
 
     @property
     def customer(self):
@@ -29,3 +29,7 @@ class Order:
     @property
     def price(self):
         return self._price
+
+    @classmethod
+    def all(cls):
+        return cls._all

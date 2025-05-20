@@ -1,11 +1,8 @@
 from order import Order
 
 class Customer:
-    all_customers = []
-
     def __init__(self, name):
         self.name = name
-        Customer.all_customers.append(self)
 
     @property
     def name(self):
@@ -13,13 +10,14 @@ class Customer:
 
     @name.setter
     def name(self, value):
-        if isinstance(value, str) and 1 <= len(value) <= 15:
-            self._name = value
-        else:
-            raise ValueError("Name must be a string of 1 to 15 characters.")
+        if not isinstance(value, str):
+            raise TypeError("Name must be a string")
+        if not (1 <= len(value) <= 15):
+            raise ValueError("Name must be 1-15 characters long")
+        self._name = value
 
     def orders(self):
-        return [order for order in Order.all_orders if order.customer == self]
+        return [order for order in Order.all() if order.customer == self]
 
     def coffees(self):
         return list({order.coffee for order in self.orders()})
