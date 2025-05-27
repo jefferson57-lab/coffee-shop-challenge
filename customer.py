@@ -1,4 +1,3 @@
-from order import Order
 
 class Customer:
     def __init__(self, name):
@@ -17,22 +16,26 @@ class Customer:
         self._name = value
 
     def orders(self):
+        from order import Order
         return [order for order in Order.all() if order.customer == self]
 
     def coffees(self):
+        from order import Order
         return list({order.coffee for order in self.orders()})
 
     def create_order(self, coffee, price):
+        from order import Order
         return Order(self, coffee, price)
 
     @classmethod
     def most_aficionado(cls, coffee):
-        customer_spending = {}
-        for order in coffee.orders():
-            customer = order.customer
-            customer_spending[customer] = customer_spending.get(customer, 0) + order.price
-
-        if not customer_spending:
+        from order import Order
+        customers = [customer for customer in set(
+            order.customer for order in Order.all() if order.coffee == coffee)]
+        if not customers:
             return None
-
-        return max(customer_spending, key=customer_spending.get)
+        return max(
+            customers,
+            key=lambda c: sum(order.price for order in Order.all(
+            ) if order.customer == c and order.coffee == coffee)
+        )
